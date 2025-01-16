@@ -1,0 +1,103 @@
+version: v1
+name: Flo. Databricks Quality Testing
+pipeline:
+  c1c22e91-729e-4799-bcca-1cf6665d1ec7:
+    tasks:
+      2aab6c56-627f-4a8f-a12c-8c815f21ac0f:
+        integration: DATABRICKS
+        integration_job: DATABRICKS_RUN_TEST
+        parameters:
+          warehouse_id: a19d84c53280bf5f
+          statement: ' select sum(1) from orchestra_demo_2.information_schema.tables'
+          error_threshold_expression: '> 20'
+          warn_threshold_expression: '> 10'
+        depends_on: []
+        condition: null
+        name: Data Quality Test
+        tags: []
+        connection: null
+        operation_metadata: null
+        treat_failure_as_warning: null
+        configuration:
+          retries: 2
+          timeout: null
+    depends_on: []
+    condition: null
+    name: ''
+  2e79413b-e2da-4392-b1b8-9a629823ae7b:
+    tasks:
+      d94d5af7-62cb-450f-89d3-314ff3299b63:
+        integration: DATABRICKS
+        integration_job: DATABRICKS_EXECUTE_STATEMENT
+        parameters:
+          warehouse_id: a19d84c53280bf5f
+          statement: ' select sum(1) from orchestra_demo_2.information_schema.tables'
+        depends_on: []
+        condition: null
+        name: Databricks Insert
+        tags: []
+        connection: null
+        operation_metadata: null
+        treat_failure_as_warning: true
+        configuration: null
+    depends_on: []
+    condition: null
+    name: ''
+  716de3df-a269-494c-8c2b-9e6b0967c8f1:
+    tasks:
+      5cd80668-77b0-4057-beb3-7eabdaf5fc57:
+        integration: DATABRICKS
+        integration_job: DATABRICKS_RUN_TEST
+        parameters:
+          warehouse_id: a19d84c53280bf5f
+          statement: ' select * from orchestra_demo_2.information_schema.tables where
+            created_by !=''System user'''
+          error_threshold_expression: '> 5'
+          warn_threshold_expression: '> 3'
+        depends_on: []
+        condition: null
+        name: Check User Table Creation
+        tags: []
+        connection: null
+        operation_metadata: null
+        treat_failure_as_warning: null
+        configuration: null
+    depends_on:
+    - c1c22e91-729e-4799-bcca-1cf6665d1ec7
+    - 2e79413b-e2da-4392-b1b8-9a629823ae7b
+    condition: null
+    name: ''
+  0efaa388-7edc-4688-9bf6-cede353b4065:
+    tasks:
+      9eb2a255-163b-4e88-9dec-e016d459894f:
+        integration: AZURE_VM
+        integration_job: AZURE_VM_RUN_COMMAND
+        parameters:
+          resource_group: azure-zm-resource
+          vm_name: orchestra-vm
+          vm_architecture: ARM64
+          os_type: linux
+          script: python run_etl.py
+          auto_manage_vm: true
+          location: europe-west2
+        depends_on: []
+        condition: null
+        name: 'Run VM '
+        tags: []
+        connection: null
+        operation_metadata: null
+        treat_failure_as_warning: null
+        configuration: null
+    depends_on:
+    - 716de3df-a269-494c-8c2b-9e6b0967c8f1
+    condition: null
+    name: ''
+schedule:
+- name: Every 2 hours
+  cron: 58 */2 ? * * *
+  timezone: UTC
+trigger_events: []
+webhook:
+  enabled: false
+  operation_metadata: null
+configuration: null

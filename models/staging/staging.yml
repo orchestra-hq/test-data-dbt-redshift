@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: stg_customers
+        description: One record per person who has purchased one or more items
+        columns:
+          - name: CUSTKEY
+            tests:
+              - unique
+              - not_null
+      - name: stg_orderlines
+        description: Items included in an order
+        columns:
+          - name: ORDERKEY
+            tests:
+              - unique
+              - not_null
+

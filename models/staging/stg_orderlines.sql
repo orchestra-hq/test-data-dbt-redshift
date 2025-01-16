@@ -1,0 +1,20 @@
+{{ config(
+  materialized='table',
+  
+  file_format='delta'
+) }}
+
+select
+
+
+O_ORDERKEY as ORDERKEY,
+O_CUSTKEY as CUSTKEY,
+O_ORDERSTATUS as ORDERSTATUS,
+O_TOTALPRICE as TOTALPRICE,
+O_ORDERDATE as ORDERDATE,
+O_ORDERPRIORITY as ORDERPRIORITY,
+O_CLERK as CLERK,
+O_SHIPPRIORITY as SHIPPRIORITY,
+O_COMMENT as COMMENT
+
+from {{ref('orders')}} a 

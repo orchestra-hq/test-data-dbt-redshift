@@ -1,0 +1,29 @@
+version: v1
+name: Flo. dbt
+pipeline:
+  68483c10-4ea9-4a3b-a64f-06284fa058de:
+    tasks:
+      c9411d8b-f837-4815-a540-743c8340e25f:
+        integration: DBT_CORE
+        integration_job: DBT_CORE_EXECUTE
+        parameters:
+          commands: dbt build
+          package_manager: PIP
+          python_version: '3.12'
+        depends_on: []
+        condition: null
+        name: dbt build
+        tags: []
+        connection: dbt_databricks_78961
+        operation_metadata: null
+        treat_failure_as_warning: null
+        configuration: null
+    depends_on: []
+    condition: null
+    name: ''
+schedule: []
+trigger_events: []
+webhook:
+  enabled: false
+  operation_metadata: null
+configuration: null
